@@ -4,8 +4,9 @@
 import pandas as pd
 import sys
 import os
+import json
 
-def get_packets():
+def get_traffic():
     # tcpdump packets stores in Desktop/Extra Project/dump.txt
     tcp, udp, arp, icmp = [],[],[],[]
     full_path = os.path.realpath(__file__)
@@ -37,8 +38,20 @@ def get_packets():
     df_arp[1] = df_arp[1].str.replace(',','')
     df_icmp['protocol'] = df_icmp['protocol'].str.replace(',', '')
     df_udp['protocol'] = df_udp['protocol'].str.replace(',', '')
+    df = [df_tcp, df_udp, df_arp, df_icmp]
+    for i in range(len(df)):
+        df[i] = df[i].to_json(orient='records')
+        df[i] = json.loads(df[i])
+
+    # df_tcp = df_tcp.to_json(orient='records')
+    # df_tcp = json.loads(df_tcp)
+    df_udp = df_udp.to_json(orient='records')
+    df_udp = json.loads(df_udp)
+    df_arp = df_arp.to_json(orient='records')
+    df_arp = json.loads(df_arp)
+    df_icmp = df_icmp.to_json(orient='records')
+    df_icmp = json.loads(df_icmp)
 
     return df_tcp, df_udp, df_arp, df_icmp
     
-tab1, tab2, tab3, tab4 = get_packets()
-print(tab1,'\n' ,tab2,'\n', tab3,'\n', tab4)
+

@@ -5,7 +5,57 @@ Graph
 {% endblock title %}
 
 {% block content %}
-{{ data }}
 
 <!-- NOW USE GRAPH JS TO PLOT GRAPH -->
+<div id="container" >
+<canvas id="src_chart" ></canvas>
+<canvas id="dest_chart"></canvas>
+</div>
+<script src="http://hongru.github.io/proj/canvas2image/canvas2image.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script>
+
+    var config = {
+      type: 'bar',
+      data: {
+        datasets: [{
+          data: {{ graph_data.src_count|safe }},
+          backgroundColor: [
+            '#F2EC1A', '#F2EC1A','#F2EC1A','#F2EC1A','#F2EC1A','#F2EC1A'
+          ],
+          label: 'Source IP'
+        }],
+        labels: {{ graph_data.src_ip|safe }}
+      },
+      options: {
+        responsive: true,
+      }
+    };
+    
+
+    var config2 = {
+      type: 'bar',
+      data: {
+        datasets: [{
+          data: {{ graph_data.dest_count|safe }},
+          backgroundColor: [
+            '#F74949', '#F74949','#F74949','#F74949','#F74949','#F74949'
+          ],
+          label: 'Destination IP'
+        }],
+        labels: {{ graph_data.dest_ip|safe }}
+      },
+      options: {
+        responsive: true,
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('src_chart').getContext('2d');
+      window.myChartBar = new Chart(ctx, config);
+      var ctx = document.getElementById('dest_chart').getContext('2d');
+      window.myChartBar = new Chart(ctx, config2);
+    };
+
+</script>
 {% endblock content %}

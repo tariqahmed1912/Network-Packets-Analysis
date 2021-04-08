@@ -12,9 +12,6 @@ app = Flask(__name__)
 @app.route('/', methods=['GET','POST'])
 def main():
     if request.method == "POST":
-        for protocol in ['tcp','udp','icmp','arp']:
-            if protocol in request.form:
-                break
         packets = NetworkPackets()
         if "tcp" in request.form:
             data = packets.gettcp()
@@ -24,15 +21,20 @@ def main():
             data = packets.geticmp()
         else:
             data = packets.getarp()
-        print(data)
         graph_data = retrieveFrequencyCount(data)
-        print(graph_data)
-        return render_template('graph.html', graph_data=graph_data)
+        src_ip = graph_data['src_ip']
+        src_count = graph_data['src_count']
+        mid2 = [1,2,1.4,3]
+        labels = ['CO1','CO2','CO3','CO4']
+        return render_template('graph.html', graph_data=graph_data, src_ip=src_ip, src_count=src_count,mid2=mid2,labels=labels)
     else:
         tcp, udp, arp, icmp = get_traffic()
         context = {'tcp':tcp, 'udp':udp, 'arp':arp, 'icmp':icmp}
         return render_template('main.html', context=context)
 
+@app.route('/home')
+def home():
+    return  redirect(url_for('main'))
 
 def retrieveFrequencyCount(df):
     """Take dataframe as input and retrieve required frequency and count details.

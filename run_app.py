@@ -28,9 +28,7 @@ def main():
         labels = ['CO1','CO2','CO3','CO4']
         return render_template('graph.html', graph_data=graph_data, src_ip=src_ip, src_count=src_count,mid2=mid2,labels=labels)
     else:
-        tcp, udp, arp, icmp = get_traffic()
-        context = {'tcp':tcp, 'udp':udp, 'arp':arp, 'icmp':icmp}
-        return render_template('main.html', context=context)
+        return render_template('main.html')
 
 @app.route('/home')
 def home():
